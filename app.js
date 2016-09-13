@@ -7,6 +7,7 @@ const dataset = [];
 //setting node radius constant
 const radius = 16;
 
+//creating svg canvas
 const svg = d3.select('body')
             .append('svg')
             .attr('width', width)
@@ -38,6 +39,8 @@ function placeNode() {
 
   dataset.push(coords);
 
+  deselectAll(d3.selectAll('.selected'));
+
   svg.selectAll('circle')
      .data(dataset)
      .enter()
@@ -48,4 +51,18 @@ function placeNode() {
      .on('click', toggleSelection);
 }
 
+function deleteNode() {
+  if (d3.event.code === 'Backspace') {
+    d3.event.preventDefault();
+
+    const dataToDelete = d3.selectAll('.selected')
+                           ._groups[0][0]
+                           .__data__;
+    const index = dataset.indexOf(dataToDelete);
+    dataset.splice(index, 1);
+    d3.selectAll('.selected').remove();
+  }
+}
+
 svg.on('click', placeNode);
+d3.select('body').on('keydown', deleteNode)
