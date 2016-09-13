@@ -1,6 +1,7 @@
 //height and width constants of svg canvas
 const width = 850;
 const height = 575;
+let nodeId = 0;
 
 const dataset = [];
 
@@ -52,7 +53,10 @@ function placeNode() {
      .attr('cx', d => d[0])
      .attr('cy', d => d[1])
      .attr('r', radius)
+     .attr('id', nodeId)
      .on('mousedown', toggleSelection);
+
+  nodeId++;
 }
 
 function deleteNode() {
