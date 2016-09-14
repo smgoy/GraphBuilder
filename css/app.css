@@ -5,6 +5,14 @@
   cursor: pointer;
 }
 
-.selected {
-  fill: red;
+.node {
+  fill: #0198E1;
+  stroke: black;
+  stroke-width: 1.5px;
+}
+
+.link {
+  stroke: #999999;
+  stroke-opacity: 0.6;
+  stroke-width: 10px;
 }
