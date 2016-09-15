@@ -100,32 +100,7 @@ class ForceLayout extends React.Component {
   }
 
   addNode() {
-    this.simulation.stop();
-    this.state.data.nodes.push({index: this.state.i++});
-
-    const { width, height } = this.props;
-    const center = [width/2, height / 2];
-
-    this.simulation = d3.forceSimulation(this.state.data.nodes)
-      .force("charge", d3.forceManyBody().strength(-300))
-      .force("link", d3.forceLink(this.state.data.links).strength(.5).distance(150))
-      .force("center", d3.forceCenter(center[0], center[1]));
-
-      this.placeSVG(width, height);
-      this.placeLinks();
-      this.placeNodes();
-
-      this.simulation.on("tick", () => {
-        this.link
-          .attr('x1', (d) => d.source.x)
-          .attr('y1', (d) => d.source.y)
-          .attr('x2', (d) => d.target.x)
-          .attr('y2', (d) => d.target.y);
-
-        this.node
-          .attr('cx', (d) => d.x)
-          .attr('cy', (d) => d.y);
-      });
+    
   }
 
   nodeMouseDown() {
