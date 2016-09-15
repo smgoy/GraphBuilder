@@ -26,12 +26,12 @@ class ForceLayout extends React.Component {
 
   componentDidMount() {
     const { width, height } = this.props;
-    const center = [width/2, height / 2];
+    this.center = [width/2, height / 2];
 
     this.simulation = d3.forceSimulation(this.state.data.nodes)
       .force("charge", d3.forceManyBody().strength(-300))
       .force("link", d3.forceLink(this.state.data.links).strength(.5).distance(150))
-      .force("center", d3.forceCenter(center[0], center[1]));
+      .force("center", d3.forceCenter(this.center[0], this.center[1]));
 
     this.placeSVG(width, height);
     this.placeLinks();
@@ -89,6 +89,7 @@ class ForceLayout extends React.Component {
   }
 
   dragged(d) {
+    console.log(d3.selectAll('.node').data()[0]);
     d.fx = d3.event.x;
     d.fy = d3.event.y;
   }
@@ -100,7 +101,11 @@ class ForceLayout extends React.Component {
   }
 
   addNode() {
-    
+    this.state.data.nodes = this.state.data.nodes.concat({index: this.state.i++});
+    this.placeNodes();
+    this.simulation.nodes(this.state.data.nodes);
+    // this.simulation.force('link').links(this.state.data.links);
+    this.simulation.restart();
   }
 
   nodeMouseDown() {
@@ -118,15 +123,9 @@ class ForceLayout extends React.Component {
       .attr('r', 19)
       .transition()
       .duration(100)
-      .attr('r', 16)
+      .attr('r', radius)
       .duration(300)
       .attr('stroke-width', 3);
-  }
-
-  deselectAll() {
-    this.nodes.transition()
-      .duration(100)
-      .attr('r', 16);
   }
 
   render() {
