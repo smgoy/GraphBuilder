@@ -1,7 +1,7 @@
 .canvas {
   display: block;
   border: 1px solid black;
-  margin: 50px auto;
+  margin: 10px auto 50px auto;
   cursor: pointer;
 }
 
@@ -14,4 +14,9 @@
   stroke: #999999;
   stroke-opacity: 0.6;
   stroke-width: 10px;
+}
+
+.intro {
+  margin: 0 auto;
+  width: 850px;
 }

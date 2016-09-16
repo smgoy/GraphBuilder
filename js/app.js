@@ -68,6 +68,8 @@ force.on("tick", () => {
 function nodeMouseDown() {
   d3.event.stopPropagation();
 
+  addEdge(d3.selectAll('.selected').data()[0], d3.select(this).data()[0]);
+
   clearSelection();
 
   const node = d3.select(this);
@@ -81,6 +83,7 @@ function nodeMouseDown() {
     .attr('r', radius)
     .duration(300)
     .attr('stroke-width', 3);
+
 }
 
 function clearSelection() {
@@ -94,7 +97,7 @@ function clearSelection() {
 function addNode() {
   const pos = d3.mouse(this);
   data.nodes.push({index: data.node_count++, x: pos[0], y: pos[1]});
-  clearSelection();
+
   update();
 }
 
@@ -105,22 +108,36 @@ function deleteNode() {
     const nodeData = d3.selectAll('.selected').data()[0];
     const nodeIndex = data.nodes.indexOf(nodeData);
     data.nodes.splice(nodeIndex, 1);
-    data.links = data.links.filter( linkObj => linkObj.source.index !== nodeIndex );
-    data.links = data.links.filter( linkObj => linkObj.target.index !== nodeIndex );
-
+    const edges = data.links.filter(linkObj => {
+      return (
+        linkObj.source.index === nodeIndex || linkObj.target.index === nodeIndex
+      );
+    });
+    edges.forEach( edge => {
+      const edgeIndex = data.links.indexOf(edge);
+      data.links.splice(edgeIndex, 1);
+    });
+    clearSelection();
     update();
   }
 }
 
+function addEdge(node1, node2) {
+  if (!node1) return null;
+  if (node1.index === node2.index) return null;
+  let overlap = false;
+  data.links.forEach( linkObj => {
+    if (linkObj.source.index === node1.index && linkObj.target.index === node2.index
+        || linkObj.source.index === node2.index && linkObj.target.index === node1.index) {
+      overlap = true;
+    }
+  });
+  if (overlap) return null;
+  data.links.push({source: node1.index, target: node2.index});
+  update();
+}
+
 function update() {
-  link = link.data(data.links);
-
-  link.enter()
-    .append("line")
-    .attr("class", "link");
-
-  link.exit().remove();
-
   node = node.data(data.nodes);
 
   node.enter()
@@ -131,6 +148,14 @@ function update() {
     .on('mousedown', nodeMouseDown);
 
   node.exit().remove();
+
+  link = link.data(data.links);
+
+  link.enter()
+    .append("line")
+    .attr("class", "link");
+
+  link.exit().remove();
 
   force.start();
   clearSelection();
