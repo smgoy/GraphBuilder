@@ -1,39 +1,64 @@
 # Graph Builder
 
-## Background
+Graph builder is a simple way to make graphs with nodes and edges.
 
-Graph builder is an interactive canvas where the user will be able to add and delete graph nodes and connections between nodes. The user will also be able to drag the graph by clicking and holding a node while moving the cursor. The graph structure will always move back to it's original position on the screen.
+The application uses JavaScript's D3 force layout, which applies force between nodes as well as attracting the nodes to the center of the page. Force layout also allows for smooth transition—keeping the data and the visual experience in sync—when dragging the nodes around the page.
 
-## Functionality and MVP
+### Build some graphs!
 
-- [ ] Add and remove nodes from the canvas
-- [ ] Add and remove node connections from the canvas
-- [ ] Drag the graph structure by clicking and holding a node while moving the cursor
-- [ ] The structure will always stay in original position
-- [ ] Nodes and connections styled to make the structure visually appealing.
+[Graph Builder](#)
 
-## Wireframes
+## Initialization
 
-This app will consist of a single screen with a boxed in area where users can begin to build a graph. Nav links to the Github and my LinkedIn will be included at the bottom of the project—below the boxed in screen. Upon entry a modal will pop up with simple instructions on how to proceed with constructing and deconstructing a graph. Controls will include clicking on an area where a node will appear, selecting a node and pressing the delete key to remove a node, selecting and holding a node will drag the structure from the selected node, selecting one node followed by selecting another node will add a connection between to two nodes, and finally deleting a node will remove all connections. Additionally as a bonus feature, a selection form will be included where the user can select predetermined graphical structures to start out with. When selecting the structure the graph will be dynamically build for the user.
+The graph builder initializes to a simple graph with 3 nodes and 2 edges
 
-## Architecture and Technologies
+![alt](https://s17.postimg.org/l83zd578f/start_screen.png)
 
-This project will be implemented with the following technologies:
+Here's the initial data:
 
-- `d3.js` for creating and removing node elements.
+```
+let data = {
+  nodes: [
+    {index: 0},
+    {index: 1},
+    {index: 2}
+  ],
+  node_count: 3,
+  links: [
+    {source: 0, target: 1},
+    {source: 1, target: 2}
+  ]
+};
+```
 
-The project will consist of a css and single `app.js` file using the `d3.js` library.
+## Dragging Nodes
 
-## Implementation and Timeline
+D3's force layout uses a tick function that listens for any node movement. The tick function adjusts nodes positions as well as insures that they are in bounds of the determined force.
 
-**Day 1:**  Render nodes on the screen when clicking in a particular spot on the canvas. Delete nodes when a node is selected and delete button is pressed. Style nodes.
+```
+force.on("tick", () => {
+  link
+    .attr('x1', (d) => d.source.x)
+    .attr('y1', (d) => d.source.y)
+    .attr('x2', (d) => d.target.x)
+    .attr('y2', (d) => d.target.y);
 
-**Day 2:** Add connections between nodes when a user clicks one node and subsequently clicks on another node. Connections are removed from nodes that are deleted. Style connections.
+  node
+    .attr('cx', (d) => d.x)
+    .attr('cy', (d) => d.y)
+    .call(force.drag());
 
-**Day 3:** Give nodes and the graph the ability to be dragged by a particular node when the user clicks and holds onto a node with the cursor. The graph will always spring back to center.
+});
+```
 
-**Day 4:** Add additional styling and clean up if needed. As well as work on bonus features.
+## Adding, Selecting and Deleting Nodes
 
-## Bonus Features:
+Users can simply add nodes by clicking the mouse. Additionally users can select a specific node by clicking on that node. Nodes have click events that utilize D3 transitions, allowing the node to have a growing and shrinking effect as well as a thicker border. Users can simply delete these selected nodes by pressing the delete key.
 
-To add some built in functionality to the graph builder, as a bonus feature, the user will be able to select some predetermined graphical figures that will be dynamically built for the user. From this state, the user will then be able to manipulate the graphical structure.
+![alt](https://s18.postimg.org/sndiu8xwp/add_select_delete.png)
+
+## Adding and Deleting Edges
+
+Edges can be added by selecting a node and subsequently selecting a different node in the graph's structure. Deleting edges can be achieved by deleting nodes, where all associated edges will be removed.
+
+![alt](https://s14.postimg.org/yw819iish/add_edge.png)
