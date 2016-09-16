@@ -6,7 +6,7 @@ The application uses JavaScript's D3 force layout, which applies force between n
 
 ### Build some graphs!
 
-[Graph Builder](#)
+[Graph Builder](https://smgoy.github.io/GraphBuilder/)
 
 ## Initialization
 
