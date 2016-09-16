@@ -1,4 +1,4 @@
-const data = {
+let data = {
   nodes: [
     {index: 0},
     {index: 1},
@@ -36,7 +36,7 @@ const svg = d3.select("body")
   .attr('class', 'canvas')
   .on('mousedown', addNode);
 
-const link = svg.selectAll('line')
+let link = svg.selectAll('line')
   .data(data.links)
   .enter()
   .append('line')
@@ -62,6 +62,7 @@ force.on("tick", () => {
     .attr('cx', (d) => d.x)
     .attr('cy', (d) => d.y)
     .call(force.drag());
+
 });
 
 function nodeMouseDown() {
@@ -83,7 +84,9 @@ function nodeMouseDown() {
 }
 
 function clearSelection() {
-  d3.selectAll('.selected').transition()
+  d3.selectAll('.selected')
+    .classed('selected', false)
+    .transition()
     .duration(500)
     .attr('stroke-width', 1.5);
 }
@@ -99,20 +102,24 @@ function deleteNode() {
   if(d3.event.code === 'Backspace') {
     d3.event.preventDefault();
 
-    const nodeIndex = d3.selectAll('.selected').data()[0].index;
-    data.nodes = data.nodes.filter( nodeObj => nodeObj.index != nodeIndex);
+    const nodeData = d3.selectAll('.selected').data()[0];
+    const nodeIndex = data.nodes.indexOf(nodeData);
+    data.nodes.splice(nodeIndex, 1);
+    data.links = data.links.filter( linkObj => linkObj.source.index !== nodeIndex );
+    data.links = data.links.filter( linkObj => linkObj.target.index !== nodeIndex );
 
     update();
   }
 }
 
 function update() {
-  // const linkToUpdate = svg.selectAll(".link")
-  //           .data(links, d =>  d.source.id + "-" + d.target.id);
-  //
-  // linkToUpdate.enter()
-  //   .append("line")
-  //   .attr("class", "link");
+  link = link.data(data.links);
+
+  link.enter()
+    .append("line")
+    .attr("class", "link");
+
+  link.exit().remove();
 
   node = node.data(data.nodes);
 
@@ -126,98 +133,8 @@ function update() {
   node.exit().remove();
 
   force.start();
+  clearSelection();
 
 }
 
 force.start();
-
-
-//   placeSVG(width, height) {
-//     this.svg = d3.select(this.refs.mountPoint)
-//       .append('svg')
-//       .attr('width', width)
-//       .attr('height', height)
-//       .on('mousedown', this.addNode.bind(this));
-//   }
-//
-//   placeNodes() {
-//     this.node = this.svg.selectAll('circle')
-//       .data(this.state.data.nodes)
-//       .enter()
-//       .append('circle')
-//       .attr('r', radius)
-//       .attr('stroke-width', 1.5)
-//       .classed('node', true)
-//       .on('mousedown', this.nodeMouseDown)
-//       .call(d3.drag()
-//         .on("start", this.dragStarted.bind(this))
-//         .on("drag", this.dragged)
-//         .on("end", this.dragEnded.bind(this)));
-//   }
-//
-//   placeLinks() {
-//     this.link = this.svg.selectAll('line')
-//       .data(this.state.data.links)
-//       .enter()
-//       .append('line')
-//       .classed('link', true);
-//   }
-//
-//   dragStarted(d) {
-//     if (!d3.event.active) this.simulation.alphaTarget(0.3).restart();
-//     d.fx = d.x;
-//     d.fy = d.y;
-//   }
-//
-//   dragged(d) {
-//     console.log(d3.selectAll('.node').data()[0]);
-//     d.fx = d3.event.x;
-//     d.fy = d3.event.y;
-//   }
-//
-//   dragEnded(d) {
-//     if (!d3.event.active) this.simulation.alphaTarget(0);
-//     d.fx = null;
-//     d.fy = null;
-//   }
-//
-//   addNode() {
-//     this.state.data.nodes = this.state.data.nodes.concat({index: this.state.i++});
-//     this.placeNodes();
-//     this.simulation.nodes(this.state.data.nodes);
-//     // this.simulation.force('link').links(this.state.data.links);
-//     this.simulation.restart();
-//   }
-//
-//   nodeMouseDown() {
-//     d3.event.stopPropagation();
-//
-//     d3.selectAll('.selected').transition()
-//       .duration(500)
-//       .attr('stroke-width', 1.5);
-//
-//     const node = d3.select(this);
-//
-//     node.classed('selected', true);
-//     node.transition()
-//       .duration(100)
-//       .attr('r', 19)
-//       .transition()
-//       .duration(100)
-//       .attr('r', radius)
-//       .duration(300)
-//       .attr('stroke-width', 3);
-//   }
-//
-//   render() {
-//     const { width, height } = this.props;
-//     const style = {
-//       height,
-//       width
-//     };
-//
-//     return <div className="canvas" style={style} ref="mountPoint" />;
-//   }
-// }
-//
-// export default ForceLayout;
