@@ -17,6 +17,15 @@ const width = 850;
 const height = 575;
 const center = [width/2, height / 2];
 
+d3.selection.prototype.moveToBack = function() {
+  return this.each(function() {
+      var firstChild = this.parentNode.firstChild;
+      if (firstChild) {
+          this.parentNode.insertBefore(this, firstChild);
+      }
+  });
+};
+
 d3.select('body').on('keydown', deleteNode);
 
 const force = d3.layout.force()
@@ -68,7 +77,7 @@ force.on("tick", () => {
 function nodeMouseDown() {
   d3.event.stopPropagation();
 
-  addEdge(d3.selectAll('.selected').data()[0], d3.select(this).data()[0]);
+  const firstNode = d3.selectAll('.selected').data()[0];
 
   clearSelection();
 
@@ -84,6 +93,8 @@ function nodeMouseDown() {
     .duration(300)
     .attr('stroke-width', 3);
 
+  addEdge(firstNode, d3.select(this).data()[0]);
+
 }
 
 function clearSelection() {
@@ -92,6 +103,7 @@ function clearSelection() {
     .transition()
     .duration(500)
     .attr('stroke-width', 1.5);
+
 }
 
 function addNode() {
@@ -106,6 +118,7 @@ function deleteNode() {
     d3.event.preventDefault();
 
     const nodeData = d3.selectAll('.selected').data()[0];
+    if (!nodeData) return null;
     const nodeIndex = data.nodes.indexOf(nodeData);
     data.nodes.splice(nodeIndex, 1);
     const edges = data.links.filter(linkObj => {
@@ -117,7 +130,7 @@ function deleteNode() {
       const edgeIndex = data.links.indexOf(edge);
       data.links.splice(edgeIndex, 1);
     });
-    clearSelection();
+
     update();
   }
 }
@@ -134,10 +147,22 @@ function addEdge(node1, node2) {
   });
   if (overlap) return null;
   data.links.push({source: node1.index, target: node2.index});
+
   update();
 }
 
 function update() {
+  link = link.data(data.links);
+
+  link.enter()
+    .append("line")
+    .attr("class", "link");
+
+  link.exit().remove();
+
+  d3.selectAll('line')
+    .moveToBack();
+
   node = node.data(data.nodes);
 
   node.enter()
@@ -148,14 +173,6 @@ function update() {
     .on('mousedown', nodeMouseDown);
 
   node.exit().remove();
-
-  link = link.data(data.links);
-
-  link.enter()
-    .append("line")
-    .attr("class", "link");
-
-  link.exit().remove();
 
   force.start();
   clearSelection();
