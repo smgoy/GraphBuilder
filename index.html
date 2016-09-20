@@ -3,22 +3,30 @@
   <head>
     <meta charset="utf-8">
     <title>Graph Builder</title>
-     <link rel="shortcut icon" type="image/x-icon" href="https://s17.postimg.org/p54n89yrz/logo.png" />
+    <link rel="shortcut icon" type="image/x-icon" href="https://s17.postimg.org/p54n89yrz/logo.png" />
     <link rel="stylesheet" href="./css/app.css"></link>
+    <link href="https://fonts.googleapis.com/css?family=Muli" rel="stylesheet">
+    <link rel="stylesheet" href="./font-awesome-4.6.3/css/font-awesome.min.css">
   </head>
 
   <body>
     <div class="intro">
-      <h1>Graph Builder</h1>
-      <p>
-        Thanks for checking out my graph builder which uses d3's force layout.
-        Click within the border to add a node. Try draggin around the graph.
-        Select a node by clicking it. What happens when you hit the delete key?
-        Select two nodes to add an edge between them.
+      <h1 class="title">Graph Builder</h1>
+      <p class="instructions">
+        Thank you for checking out my graph builder which uses d3's force layout.
+        (1) Click within the border to add a node. (2) Try dragging a node around the graph.
+        (3) Select a node by clicking it. (4) What happens when you hit the delete key?
+        (5) Select two nodes to add an edge between them.
       </p>
+
+      <ul>
+        <li><a href="https://github.com/smgoy" target="_blank"><i class="fa fa-github fa-2x" aria-hidden="true"></i></a></li>
+        <li><a href="https://www.linkedin.com/in/sam-gyory-43572766" target="_blank"><i class="fa fa-linkedin-square fa-2x" aria-hidden="true"></i></a></li>
+      </ul>
     </div>
+
   </body>
 
-  <script src="//d3js.org/d3.v3.min.js"></script>
+  <script src="https://d3js.org/d3.v3.min.js"></script>
   <script src='./js/app.js'></script>
 </html>

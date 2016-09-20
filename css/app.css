@@ -1,3 +1,44 @@
+h1, p, ul {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Muli', sans-serif;
+}
+
+ul {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  list-style: none;
+}
+
+a:visited {
+  color: inherit;
+}
+
+a:active {
+  color: inherit;
+}
+
+a:hover {
+  cursor: pointer;
+}
+
+.intro {
+  margin: 20px auto 0 auto;
+  width: 850px;
+}
+
+.title {
+  margin-bottom: 10px;
+}
+
+.instructions {
+  margin-bottom: 10px;
+}
+
 .canvas {
   display: block;
   border: 1px solid black;
@@ -14,9 +55,4 @@
   stroke: #999999;
   stroke-opacity: 0.6;
   stroke-width: 10px;
-}
-
-.intro {
-  margin: 0 auto;
-  width: 850px;
 }
