@@ -12,8 +12,6 @@ The application uses JavaScript's D3 force layout, which applies force between n
 
 The graph builder initializes to a simple graph with 3 nodes and 2 edges
 
-![alt](https://s17.postimg.org/l83zd578f/start_screen.png)
-
 Here's the data:
 
 ```
@@ -55,10 +53,6 @@ force.on("tick", () => {
 
 Users can simply add nodes by clicking the mouse. Additionally users can select a specific node by clicking directly on that node. Nodes have click events that utilize D3 transitions, giving the node to a growing and shrinking effect as well as a thicker border. Users can simply delete these selected nodes by pressing the delete key.
 
-![alt](https://s18.postimg.org/sndiu8xwp/add_select_delete.png)
-
 ## Adding and Deleting Edges
 
 Edges can be added by selecting a node and subsequently selecting a different node (that does not have a shared edge) in the graph's structure. Deleting edges can be achieved by deleting nodes, where all associated edges will be automatically removed.
-
-![alt](https://s14.postimg.org/yw819iish/add_edge.png)
